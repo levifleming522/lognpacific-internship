@@ -1,0 +1,48 @@
+<#
+.SYNOPSIS
+    This PowerShell script ensures that camera access from the lock screen is disabled
+
+.NOTES
+    Author          : Levi Fleming
+    LinkedIn        : https://www.linkedin.com/in/levi-fleming22/
+    GitHub          : https://github.com/levifleming522
+    Date Created    : 2025-03-10
+    Last Modified   : 2025-03-10
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN10-CC-000005
+
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
+
+.USAGE
+    Put any usage instructions here.
+    Example syntax:
+    PS C:\> ./STIG-ID-WN10-CC-00005.ps1 
+#>
+
+
+# Define the registry path and value name
+$RegPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization"
+$ValueName = "NoLockScreenCamera"
+$ValueData = 1
+
+# Check if the registry path exists, if not, create it
+if (-not (Test-Path $RegPath)) {
+    New-Item -Path $RegPath -Force | Out-Null
+}
+
+# Set the registry value
+Set-ItemProperty -Path $RegPath -Name $ValueName -Value $ValueData -Type DWord
+
+# Verify the change
+$Result = Get-ItemProperty -Path $RegPath -Name $ValueName
+if ($Result.$ValueName -eq $ValueData) {
+    Write-Host "Remediation successful: Camera access from the lock screen is disabled." -ForegroundColor Green
+} else {
+    Write-Host "Remediation failed: Unable to set the required registry value." -ForegroundColor Red
+}

@@ -1,0 +1,44 @@
+<#
+.SYNOPSIS
+    This PowerShell script ensures whether a domain user can sign in using a convenience PIN to prevent enabling (Password Stuffer).
+
+.NOTES
+    Author          : Levi Fleming
+    LinkedIn        : https://www.linkedin.com/in/levi-fleming22/
+    GitHub          : https://github.com/levifleming522
+    Date Created    : 2025-03-10
+    Last Modified   : 2025-03-10
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN10-CC-000370
+
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
+
+.USAGE
+    Put any usage instructions here.
+    Example syntax:
+    PS C:\> .\STIG-ID-WN10-CC-000370.ps1 
+#>
+
+
+# Define registry path and value
+$RegPath = "HKLM:\Software\Policies\Microsoft\Windows\System"
+$RegName = "AllowDomainPINLogon"
+$RegValue = 0
+
+# Check if the registry path exists, if not, create it
+if (!(Test-Path $RegPath)) {
+    New-Item -Path $RegPath -Force | Out-Null
+}
+
+# Set the registry value to disable domain PIN logon
+Set-ItemProperty -Path $RegPath -Name $RegName -Value $RegValue -Type DWord
+
+# Confirm the change
+Write-Host "Convenience PIN for domain users has been disabled."
+

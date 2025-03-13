@@ -1,0 +1,46 @@
+<#
+.SYNOPSIS
+This PowerShell script enables auditing for File Share Success events and ensures that detailed audit policy settings override category settings. 
+It configures the system to log successful file share access,
+
+.NOTES
+    Author          : Levi Fleming
+    LinkedIn        : https://www.linkedin.com/in/levi-fleming22/
+    GitHub          : https://github.com/levifleming522
+    Date Created    : 2025-03-12
+    Last Modified   : 2025-03-12
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN10-AU-000082
+
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
+
+.USAGE
+    Put any usage instructions here.
+    Example syntax:
+    PS C:\> .\STIG-ID-WN10-CC-000370.ps1 
+#>
+
+
+# Run as Administrator
+
+# Enable Audit: Force audit policy subcategory settings to override audit policy category settings
+Write-Host "Enabling 'Audit: Force audit policy subcategory settings'..."
+auditpol /set /category:"System" /subcategory:"Audit Policy Change" /success:enable /failure:enable
+
+# Enable Object Access >> File Share auditing (Success)
+Write-Host "Configuring Audit Policy for File Share (Success)..."
+auditpol /set /subcategory:"File Share" /success:enable
+
+# Verify changes
+Write-Host "Verifying applied audit policies..."
+auditpol /get /category:"Object Access"
+
+Write-Host "Remediation complete. Please verify compliance by re-running your scan."
+
+
